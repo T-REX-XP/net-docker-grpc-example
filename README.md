@@ -5,13 +5,14 @@
 Set of example projects to show how to work with .NET/gRPC/docker together
 
 # What are done?
-- gRPC service (grpc-service
-- WebApi Service with swagger UI(web-api)
+- gRPC service (grpc-service) (actions: GetById,Create)
+- WebApi Service
+- swagger UI(web-api)
 - Mongo DB(mongo)
 - Docker compose script that are build and run all containers
+-	Communication between WebApi and gRPC
 
 # Still in progress
--	Communication between WebApi and gRPC
 -	Communication between gRPC and Mongo
 -	Internal network between containers
 -	Connection strings inside docker compose
