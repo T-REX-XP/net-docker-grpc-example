@@ -15,10 +15,13 @@ namespace WebAPIService.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly ILogger<MoviesController> _logger;
-
+        private readonly GrpcChannel channel;
+        private readonly MovieServiceGRPC.MovieServiceGRPCClient client;
         public MoviesController(ILogger<MoviesController> logger)
         {
             _logger = logger;
+            channel = GrpcChannel.ForAddress("https://localhost:49201/");
+            client = new MovieServiceGRPC.MovieServiceGRPCClient(channel);
         }
 
         /// <summary>
@@ -27,14 +30,14 @@ namespace WebAPIService.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "Get top 1 Movie")]
         [HttpGet]
-        public async Task<Movie> GetAsync()
+        public Movie Get()
         {
             return new Models.Movie()
             {
-                Director = "",
-                Id = new Guid(),
+                Director = "FFF",
+                Id = "",
                 Rated = "",
-                Released = DateTime.Now,
+                Released = "",
                 Runtime = "",
                 Title = "",
                 Year = ""
@@ -48,31 +51,44 @@ namespace WebAPIService.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "Get Movie by Id")]
         [HttpGet("id")]
-        public async Task<Movie> GetAsync(Guid id)
+        public async Task<Movie> GetAsync(string id)
         {
-            return new Movie()
-            {
-                Director = "",
-                Id = new Guid(),
-                Rated = "",
-                Released = DateTime.Now,
-                Runtime = "",
-                Title = "",
-                Year = ""
-            };
+            var reply = client.GetMovie(new MovieRequest { Id = id });
+            //TODO: Use Automapper
+            return await Task.FromResult(new Movie() { 
+                Id = reply.Movie.Id, 
+                Title = reply.Movie.Title,
+                Director= reply.Movie.Director,
+                Rated = reply.Movie.Reted,
+                Released = reply.Movie.Released,
+                Runtime = reply.Movie.Runtime,
+                Year = reply.Movie.Year
+            });
         }
 
         /// <summary>
         /// Create Movie
         /// </summary>
-        /// <param name="movie"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [SwaggerOperation(Summary = "Create Movie")]
         [HttpPost]
-        public async Task<Guid> CreateAsync(Models.Movie movie)
+        public string Create(Models.WebRequests.CreateMovieRequest request)
         {
-            //TODO: implement create 
-            return Guid.NewGuid();
+            return client.CreateMovie(
+                    //TODO: Use Automapper
+                    new CreateMovieRequest
+                    {
+                        Movie = new MovieGRPC
+                        {
+                            Title = request.Title,
+                            Director = request.Director,
+                            Released = request.Released,
+                            Reted = request.Rated,
+                            Runtime = request.Runtime,
+                            Year = request.Year
+                        }
+                    }).Id;
         }
 
         /// <summary>
