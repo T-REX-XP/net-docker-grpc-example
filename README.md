@@ -36,5 +36,5 @@ Set of example projects to show how to work with .NET/gRPC/docker together
 
 ## Controllers:
 -	All actions of the controller should be async
-- Only for the PoC, the swagger is available in production mode and without authentication. I’m not recommending to do the same in a real life. At least authorization on the swaggers or whitelist on the firewall should be implemented. Potentially this configuration may lead the security issue in future
+- Only for the PoC, the swagger is available in production mode and without authentication. I’m not recommending to do the same in a real life. At least authorization on the swaggers or whitelist on the firewall should be implemented. Potentiall, current configuration may lead the security issue in future.
 
