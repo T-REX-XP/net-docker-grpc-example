@@ -29,6 +29,7 @@ namespace GrpcService1
 
             services.AddSingleton<IMoviesDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<MoviesDatabaseSettings>>().Value);
+
             services.AddSingleton<Movie>();
             services.AddSingleton<MovieRepository>();
             // Auto Mapper Configurations

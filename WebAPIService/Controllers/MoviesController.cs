@@ -17,10 +17,10 @@ namespace WebAPIService.Controllers
         private readonly ILogger<MoviesController> _logger;
         private readonly GrpcChannel channel;
         private readonly MovieServiceGRPC.MovieServiceGRPCClient client;
-        public MoviesController(ILogger<MoviesController> logger)
+        public MoviesController(ILogger<MoviesController> logger, IGRPCSettings settings)
         {
             _logger = logger;
-            channel = GrpcChannel.ForAddress("https://localhost:49201/");
+            channel = GrpcChannel.ForAddress(settings.Address);
             client = new MovieServiceGRPC.MovieServiceGRPCClient(channel);
         }
 

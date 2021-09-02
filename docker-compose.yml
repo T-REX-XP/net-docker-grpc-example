@@ -1,29 +1,58 @@
 # Use root/example as user/password credentials
-version: "3.1"
+version: "3.9"
 
 services:
   mongo:
+    container_name: mongo
     image: mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: mongo4all
+      MONGO_INITDB_DATABASE: MoviesDb
+    volumes:
+      - ./data/mongodb/db:/data/db
+    healthcheck:
+      test:
+      - CMD
+      - mongo
+      - --eval
+      - "db.adminCommand('ping')"
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_URL: "mongodb://root:mongo4all@database:27017/"
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGOEXPRESS_LOGIN}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGOEXPRESS_PASSWORD}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    external_links:
+      - "mongo:database"
+    ports:
+      - 8081:8081
 
   grpc-service:
+    container_name: grpc-service
     build: ./GrpcService1
     restart: always
     depends_on: 
-     - mongo
-    links:
+      mongo:
+        condition: service_started
+    external_links:
       - "mongo:database"
 
   web-api:
+    container_name: web-api
     build: ./WebAPIService
     restart: always
-    depends_on: 
-      - grpc-service
-    links:
+    depends_on:
+      grpc-service:
+        condition: service_started
+    external_links:
       - "grpc-service:backend"
     ports: 
       - 8080:80
-      - 444:443

@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using WebAPIService.Models;
 
 namespace WebAPIService
 {
@@ -18,6 +20,11 @@ namespace WebAPIService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<GRPCSettings>(
+             Configuration.GetSection(nameof(GRPCSettings)));
+
+            services.AddSingleton<IGRPCSettings>(sp =>
+            sp.GetRequiredService<IOptions<GRPCSettings>>().Value);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

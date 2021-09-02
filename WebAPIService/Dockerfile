@@ -8,7 +8,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["./WebAPIService.csproj", "."]
-COPY ["./Protos/greet.proto", "./Protos/"]
 RUN dotnet restore "./WebAPIService.csproj"
 COPY . .
 RUN dotnet build "WebAPIService.csproj" -c Release -o /app/build
