@@ -7,9 +7,9 @@ services:
     image: mongo
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: mongo4all
-      MONGO_INITDB_DATABASE: MoviesDb
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_LOGIN}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     volumes:
       - ./data/mongodb/db:/data/db
     healthcheck:
@@ -24,9 +24,12 @@ services:
     image: mongo-express
     restart: always
     environment:
-      ME_CONFIG_MONGODB_URL: "mongodb://root:mongo4all@database:27017/"
-      ME_CONFIG_BASICAUTH_USERNAME: ${MONGOEXPRESS_LOGIN}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGOEXPRESS_PASSWORD}
+      #ME_CONFIG_MONGODB_URL: "mongodb://root:mongo4all@database:27017/"
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_LOGIN}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+      ME_CONFIG_BASICAUTH_USERNAME: ${ME_BASIC_LOGIN}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_BASIC_PASS}
     depends_on:
       mongo:
         condition: service_healthy
@@ -39,6 +42,10 @@ services:
     container_name: grpc-service
     build: ./GrpcService1
     restart: always
+    environment:
+      MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+      MONGODB_ADMINUSERNAME: ${MONGO_LOGIN}
+      MONGODB_PASSWORD: ${MONGO_PASSWORD}
     depends_on: 
       mongo:
         condition: service_started
@@ -52,7 +59,19 @@ services:
     depends_on:
       grpc-service:
         condition: service_started
+    environment:
+      GRPC_ADDRESS: ${GRPC_ADDRESS}
     external_links:
       - "grpc-service:backend"
-    ports: 
-      - 8080:80
+
+  proxy:
+    container_name: proxy
+    restart: always
+    depends_on: 
+      - web-api
+    build: ./nginx
+    ports:
+      - 8082:80
+      - 8083:443
+
+    
