@@ -18,6 +18,10 @@ Set of example projects to show how to work with .NET/gRPC/docker together
 - Kubernetes
 - Deployment
 
+## API
+Please use the following link to load Postman collection 
+[![Run in Postman](https://run.pstmn.io/button.svg)](/open-api-spec.json)
+
 
 ## List of containers
 ![Screenshot](imgs/docker_containers_list.png)
