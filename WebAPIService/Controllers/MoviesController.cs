@@ -10,6 +10,7 @@ using WebAPIService.Models;
 
 namespace WebAPIService.Controllers
 {
+    [Autorization]
     [ApiController]
     [Route("api/[controller]")]
     public class MoviesController : ControllerBase
