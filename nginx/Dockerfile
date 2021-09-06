@@ -1,4 +1,4 @@
-FROM nginx
+FROM nginx:alpine
 RUN mkdir -p /etc/letsencrypt/live/
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY fullchain.pem /etc/letsencrypt/live/fullchain.pem
