@@ -7,9 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["./WebAPIService.csproj", "."]
-RUN dotnet restore "./WebAPIService.csproj"
+COPY ["WebAPIService/WebAPIService.csproj", "WebAPIService/"]
+RUN dotnet restore "WebAPIService/WebAPIService.csproj"
 COPY . .
+WORKDIR "/src/WebAPIService"
 RUN dotnet build "WebAPIService.csproj" -c Release -o /app/build
 
 FROM build AS publish

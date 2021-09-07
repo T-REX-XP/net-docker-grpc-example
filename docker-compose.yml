@@ -39,7 +39,9 @@ services:
 
   grpc-service:
     container_name: grpc-service
-    build: ./grpcService
+    build:
+      context: .
+      dockerfile: grpcService/Dockerfile
     restart: always
     environment:
       MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
@@ -53,7 +55,9 @@ services:
 
   web-api:
     container_name: web-api
-    build: ./WebAPIService
+    build: 
+      context: .
+      dockerfile: WebAPIService/Dockerfile
     restart: always
     depends_on:
       grpc-service:
