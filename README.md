@@ -27,7 +27,7 @@ Please use the following link to load Postman collection
 ![Screenshot](imgs/docker_containers_list.png)
 
 # How to Install ?
-
+## Docker compose
 1. Create .env file with the following env. variables:
 ```
 MONGO_LOGIN=root
@@ -39,7 +39,13 @@ ME_BASIC_PASS=
 GRPC_ADDRESS=http://backend
 ```
 2. `git clone https://github.com/T-REX-XP/net-docker-grpc-example && cd net-docker-grpc-example && docker compose build && docker compose up`
+## Kubernetes (AKS)
+1. Deploy conainers it the following order
+ - kubectl apply -f deploy-mongo.yml
+ - kubectl apply -f deploy-grpc-service.yml
+ - kubectl apply -f deploy-webapi.yml
 
+ web-api container has exposed port using LoadBalancer
 # Endpints
 -	https://localhost:8083/swagger/index.html
 -	https://localhost:8083/api/movies

@@ -3,7 +3,6 @@ version: "3.9"
 
 services:
   mongo:
-    container_name: mongo
     image: mongo
     restart: always
     environment:
@@ -20,7 +19,6 @@ services:
       - "db.adminCommand('ping')"
 
   mongo-express:
-    container_name: mongo-express
     image: mongo-express
     restart: always
     environment:
@@ -38,7 +36,7 @@ services:
       - 8081:8081
 
   grpc-service:
-    container_name: grpc-service
+    image: grpc-service
     build:
       context: .
       dockerfile: grpcService/Dockerfile
@@ -54,7 +52,7 @@ services:
       - "mongo:database"
 
   web-api:
-    container_name: web-api
+    image: web-api
     build: 
       context: .
       dockerfile: WebAPIService/Dockerfile
@@ -68,11 +66,13 @@ services:
       - "grpc-service:backend"
 
   proxy:
-    container_name: proxy
+    image: proxy
     restart: always
     depends_on: 
       - web-api
-    build: ./nginx
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
     ports:
       - 8082:80
       - 8083:443

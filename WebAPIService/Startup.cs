@@ -70,7 +70,7 @@ namespace WebAPIService
                     });
            // }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
