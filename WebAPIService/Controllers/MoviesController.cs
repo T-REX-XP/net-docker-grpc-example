@@ -33,7 +33,7 @@ namespace WebAPIService.Controllers
         [HttpGet]
         public async Task<IEnumerable<Movie>> GetMoviesAsync()
         {
-            var movies = await client.GetMoviesAsync(null);
+            var movies = await client.GetMoviesAsync(new Google.Protobuf.WellKnownTypes.Empty());
             var result = new List<Movie>();
             foreach (var item in movies.Movies)
             {
