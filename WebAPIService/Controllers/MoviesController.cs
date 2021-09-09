@@ -29,11 +29,11 @@ namespace WebAPIService.Controllers
         /// Get All Movies
         /// </summary>
         /// <returns></returns>
-        [SwaggerOperation(Summary = "Get top 1 Movie")]
+        [SwaggerOperation(Summary = "Get Movies")]
         [HttpGet]
-        public async Task<IEnumerable<Movie>> GetMoviesAsync(Models.WebRequests.GetMoviesRequest request)
+        public async Task<IEnumerable<Movie>> GetMoviesAsync(int skip=0, int take=2)
         {
-            var movies = await client.GetMoviesAsync(new GetMoviesRequest { Skip = request.Skip, Take = request.Take });
+            var movies = await client.GetMoviesAsync(new GetMoviesRequest { Skip = skip, Take = take });
             var result = new List<Movie>();
             foreach (var item in movies.Movies)
             {
