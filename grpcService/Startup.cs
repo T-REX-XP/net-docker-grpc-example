@@ -36,11 +36,12 @@ namespace GrpcService1
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MovieProfile());
+                mc.AddProfile(new MoviesResponseProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Startup));            
             services.AddGrpc();
             services.AddGrpcHttpApi();
             services.AddSwaggerGen(c =>
@@ -62,7 +63,7 @@ namespace GrpcService1
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 });
 
-            }
+            }           
 
             app.UseRouting();
 
