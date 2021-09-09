@@ -38,9 +38,9 @@ namespace GrpcService1
                 Movie = movie
             };
         }
-        public override async Task<MoviesResponse> GetMovies(Empty request, ServerCallContext context)
+        public override async Task<MoviesResponse> GetMovies(GetMoviesRequest request, ServerCallContext context)
         {
-            var moviesDto = await _movieRepository.GetAsync();
+            var moviesDto = await _movieRepository.GetAsync(request);
             Console.Write("GRPC: movies count====="+ moviesDto.Count());
             var result = new MoviesResponse();
             

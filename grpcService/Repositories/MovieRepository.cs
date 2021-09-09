@@ -21,12 +21,13 @@ namespace GrpcService1.Repositories
             _moviesCollection = database.GetCollection<Movie>(settings.MoviesCollectionName);
         }
 
-        public async Task<IEnumerable<Movie>> GetAsync() {
+        public async Task<IEnumerable<Movie>> GetAsync(GetMoviesRequest request) {
             Console.WriteLine("---------GRPC: MovieRepository BEFORE GetAsync");
             var filter = new BsonDocument();
-            var collection =  await _moviesCollection.FindAsync(filter);
+            var collection =  await _moviesCollection.Find(filter).Skip(request.Skip).Limit(request.Take).ToListAsync();
+            
             Console.WriteLine("---------GRPC: MovieRepository AFTER GetAsync");
-            return await collection.ToListAsync();
+            return collection;
         }
 
 

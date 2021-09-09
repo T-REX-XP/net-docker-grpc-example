@@ -31,9 +31,9 @@ namespace WebAPIService.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "Get top 1 Movie")]
         [HttpGet]
-        public async Task<IEnumerable<Movie>> GetMoviesAsync()
+        public async Task<IEnumerable<Movie>> GetMoviesAsync(Models.WebRequests.GetMoviesRequest request)
         {
-            var movies = await client.GetMoviesAsync(new Google.Protobuf.WellKnownTypes.Empty());
+            var movies = await client.GetMoviesAsync(new GetMoviesRequest { Skip = request.Skip, Take = request.Take });
             var result = new List<Movie>();
             foreach (var item in movies.Movies)
             {
@@ -61,7 +61,7 @@ namespace WebAPIService.Controllers
         public async Task<Movie> GetAsync(string id)
         {
             var reply = client.GetMovie(new MovieRequest { Id = id });
-            Console.WriteLine("---WebApi: id==="+ id);
+            Console.WriteLine("---WebApi: id===" + id);
             //TODO: Use Automapper
             return await Task.FromResult(new Movie()
             {
@@ -82,9 +82,9 @@ namespace WebAPIService.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "Create Movie")]
         [HttpPost]
-        public string Create(Models.WebRequests.CreateMovieRequest request)
+        public async Task<string> CreateAsync(Models.WebRequests.CreateMovieRequest request)
         {
-            return client.CreateMovie(
+            var data =  await client.CreateMovieAsync(
                     //TODO: Use Automapper
                     new CreateMovieRequest
                     {
@@ -97,7 +97,8 @@ namespace WebAPIService.Controllers
                             Runtime = request.Runtime,
                             Year = request.Year
                         }
-                    }).Id;
+                    });
+            return data.Id;
         }
 
         /// <summary>
@@ -109,7 +110,8 @@ namespace WebAPIService.Controllers
         [HttpPost("id")]
         public async Task<Guid> UpdateAsync(Models.Movie movie)
         {
-            //TODO: implement create 
+            //TODO: implement create
+            //client.CreateMovieAsync
             return Guid.NewGuid();
         }
     }
