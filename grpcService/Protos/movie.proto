@@ -20,7 +20,8 @@ service MovieServiceGRPC {
   rpc GetMovie (MovieRequest) returns (MovieResponse);
   rpc GetMovies(GetMoviesRequest) returns (MoviesResponse);
   rpc CreateMovie (CreateMovieRequest) returns (CreateMovieResponse);
-  rpc RemoveMovie (CreateMovieRequest) returns (CreateMovieResponse);
+  rpc UpdateMovie (CreateMovieRequest) returns (CreateMovieResponse);
+  rpc RemoveMovie (MovieRequest) returns (CreateMovieResponse);
 }
 
 message CreateMovieRequest {

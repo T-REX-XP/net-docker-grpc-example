@@ -30,8 +30,7 @@ namespace GrpcService1
         }
         public override async Task<MovieResponse> GetMovie(MovieRequest request, ServerCallContext context)
         {
-            var movieDto = await _movieRepository.GetAsync(request.Id);
-            Console.WriteLine("---GRPC: movieDto===" + movieDto !=null);
+            var movieDto = await _movieRepository.GetAsync(request.Id);           
             var movie = _mapper.Map<MovieGRPC>(movieDto);
             return new MovieResponse()
             {
@@ -40,15 +39,28 @@ namespace GrpcService1
         }
         public override async Task<MoviesResponse> GetMovies(GetMoviesRequest request, ServerCallContext context)
         {
-            var moviesDto = await _movieRepository.GetAsync(request);
-            Console.Write("GRPC: movies count====="+ moviesDto.Count());
+            var moviesDto = await _movieRepository.GetAsync(request);            
             var result = new MoviesResponse();
-            
+
             foreach (var item in moviesDto)
             {
                 result.Movies.Add(_mapper.Map<MovieGRPC>(item));
             }
             return result;
         }
+
+        public override async Task<CreateMovieResponse> UpdateMovie(CreateMovieRequest request, ServerCallContext context)
+        {
+            var moviesDto = _mapper.Map<Movie>(request.Movie);
+            await _movieRepository.UpdateAsync(request.Movie.Id, moviesDto);
+            return new CreateMovieResponse();
+        }
+
+        public override async Task<CreateMovieResponse> RemoveMovie(MovieRequest request, ServerCallContext context)
+        {
+            await _movieRepository.RemoveAsync(request.Id);
+            return new CreateMovieResponse() { Id = "" };
+        }
+
     }
 }

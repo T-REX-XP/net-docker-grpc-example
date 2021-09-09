@@ -8,7 +8,7 @@ message MovieGRPC {
   string id = 1;
   string title = 2;
   string year = 3;
-  string reted = 4;
+  string rated = 4;
   string released = 5;
   string runtime = 6;
   string director = 7;
@@ -18,7 +18,8 @@ service MovieServiceGRPC {
   rpc GetMovie (MovieRequest) returns (MovieResponse);
   rpc GetMovies(GetMoviesRequest) returns (MoviesResponse);
   rpc CreateMovie (CreateMovieRequest) returns (CreateMovieResponse);
-  rpc RemoveMovie (CreateMovieRequest) returns (CreateMovieResponse);
+  rpc UpdateMovie (CreateMovieRequest) returns (CreateMovieResponse);
+  rpc RemoveMovie (MovieRequest) returns (CreateMovieResponse);
 }
 
 message CreateMovieRequest {

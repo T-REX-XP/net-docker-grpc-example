@@ -55,7 +55,7 @@ namespace GrpcService1.Repositories
              await _moviesCollection.DeleteOneAsync(new BsonDocument("Id", id));
         #endregion
 
-        public void Update(string id, Movie bookIn) =>
-            _moviesCollection.ReplaceOne(movie => movie.Id == id, bookIn);
+        public async Task UpdateAsync(string id, Movie bookIn) =>
+            await _moviesCollection.ReplaceOneAsync(movie => movie.Id == id, bookIn);
     }
 }

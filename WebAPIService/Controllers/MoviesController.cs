@@ -31,7 +31,7 @@ namespace WebAPIService.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "Get Movies")]
         [HttpGet]
-        public async Task<IEnumerable<Movie>> GetMoviesAsync(int skip=0, int take=2)
+        public async Task<IEnumerable<Movie>> GetMoviesAsync([FromQuery] int skip = 0, [FromQuery] int take = 2)
         {
             var movies = await client.GetMoviesAsync(new GetMoviesRequest { Skip = skip, Take = take });
             var result = new List<Movie>();
@@ -41,7 +41,7 @@ namespace WebAPIService.Controllers
                 {
                     Id = item.Id,
                     Director = item.Director,
-                    Rated = item.Reted,
+                    Rated = item.Rated,
                     Released = item.Released,
                     Runtime = item.Runtime,
                     Title = item.Title,
@@ -57,7 +57,7 @@ namespace WebAPIService.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [SwaggerOperation(Summary = "Get Movie by Id")]
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<Movie> GetAsync(string id)
         {
             var reply = client.GetMovie(new MovieRequest { Id = id });
@@ -68,7 +68,7 @@ namespace WebAPIService.Controllers
                 Id = reply.Movie.Id,
                 Title = reply.Movie.Title,
                 Director = reply.Movie.Director,
-                Rated = reply.Movie.Reted,
+                Rated = reply.Movie.Rated,
                 Released = reply.Movie.Released,
                 Runtime = reply.Movie.Runtime,
                 Year = reply.Movie.Year
@@ -84,7 +84,7 @@ namespace WebAPIService.Controllers
         [HttpPost]
         public async Task<string> CreateAsync(Models.WebRequests.CreateMovieRequest request)
         {
-            var data =  await client.CreateMovieAsync(
+            var data = await client.CreateMovieAsync(
                     //TODO: Use Automapper
                     new CreateMovieRequest
                     {
@@ -93,7 +93,7 @@ namespace WebAPIService.Controllers
                             Title = request.Title,
                             Director = request.Director,
                             Released = request.Released,
-                            Reted = request.Rated,
+                            Rated = request.Rated,
                             Runtime = request.Runtime,
                             Year = request.Year
                         }
@@ -104,15 +104,29 @@ namespace WebAPIService.Controllers
         /// <summary>
         /// Update Moovie by Id
         /// </summary>
-        /// <param name="movie"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [SwaggerOperation(Summary = "Update Movie by Id")]
-        [HttpPost("id")]
-        public async Task<Guid> UpdateAsync(Models.Movie movie)
+        [HttpPut("{id}")]
+        public async Task UpdateAsync(string id, Models.WebRequests.CreateMovieRequest request)
         {
-            //TODO: implement create
-            //client.CreateMovieAsync
-            return Guid.NewGuid();
+            var record = new MovieGRPC()
+            {
+                Id = id,
+                Director = request.Director,
+                Released = request.Released,
+                Rated = request.Rated,
+                Runtime = request.Runtime,
+                Title = request.Title,
+                Year = request.Year
+            };
+            await client.UpdateMovieAsync(new CreateMovieRequest { Movie = record });
+
+        }
+        [HttpDelete("{id}")]
+        public async Task DeleteAsync(string id)
+        {
+            await client.RemoveMovieAsync(new MovieRequest { Id = id });
         }
     }
 }
