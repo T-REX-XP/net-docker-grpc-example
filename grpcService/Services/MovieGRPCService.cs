@@ -1,4 +1,5 @@
 using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcService1.Models;
 using GrpcService1.Repositories;
@@ -19,20 +20,26 @@ namespace GrpcService1
             _movieRepository = movieRepository;
             _logger = logger;
         }
-        public override Task<CreateMovieResponse> CreateMovie(CreateMovieRequest request, ServerCallContext context)
+        public override async Task<CreateMovieResponse> CreateMovie(CreateMovieRequest request, ServerCallContext context)
         {
             var newMovie = _mapper.Map<Movie>(request.Movie);
-            Movie createdMovie= _movieRepository.Create(newMovie);
-            return Task.FromResult(new CreateMovieResponse() { Id = createdMovie?.Id });
+            var createdMovie = await _movieRepository.CreateAsync(newMovie);
+            return await Task.FromResult(new CreateMovieResponse() { Id = createdMovie?.Id });
         }
         public override Task<MovieResponse> GetMovie(MovieRequest request, ServerCallContext context)
         {
-            var movieDto = _movieRepository.Get(request.Id);
+            var movieDto = _movieRepository.GetAsync(request.Id);
             var movie = _mapper.Map<MovieGRPC>(movieDto);
             return Task.FromResult(new MovieResponse()
             {
                 Movie = movie
             });
+        }
+        public override async Task<MoviesResponse> GetMovies(Empty request, ServerCallContext context)
+        {
+            var result = await _movieRepository.GetAsync();
+            var converted = _mapper.Map<MoviesResponse>(result);
+            return converted;
         }
     }
 }

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option csharp_namespace = "GrpcService1";
-
+import "google/protobuf/empty.proto";
 package movie;
 
 
@@ -18,19 +18,27 @@ message MovieGRPC {
 
 service MovieServiceGRPC {
   rpc GetMovie (MovieRequest) returns (MovieResponse);
+  rpc GetMovies(google.protobuf.Empty) returns (MoviesResponse);
   rpc CreateMovie (CreateMovieRequest) returns (CreateMovieResponse);
+  rpc RemoveMovie (CreateMovieRequest) returns (CreateMovieResponse);
 }
 
 message CreateMovieRequest {
   MovieGRPC movie=1;
 }
+
 message CreateMovieResponse {
   string id = 1;
 }
+
 message MovieRequest {
   string id = 1;
 }
 
 message MovieResponse {
   MovieGRPC movie=1;
+}
+
+message MoviesResponse {
+ repeated MovieGRPC movies=1;
 }

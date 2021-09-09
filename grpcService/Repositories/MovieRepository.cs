@@ -1,7 +1,9 @@
 using AutoMapper;
 using GrpcService1.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GrpcService1.Repositories
 {
@@ -9,7 +11,7 @@ namespace GrpcService1.Repositories
     {
         private readonly IMongoCollection<Movie> _moviesCollection;
         private readonly IMongoClient _client;
-       
+
 
         public MovieRepository(IMoviesDatabaseSettings settings)
         {
@@ -18,15 +20,23 @@ namespace GrpcService1.Repositories
             _moviesCollection = database.GetCollection<Movie>(settings.MoviesCollectionName);
         }
 
-        public List<Movie> Get() =>
-            _moviesCollection.Find(movie => true).ToList();
+        public async Task<IEnumerable<Movie>> GetAsync() {
+            var filter = new BsonDocument();
+            var collection =  await _moviesCollection.FindAsync(filter);
+            return await collection.ToListAsync();
+        }
 
-        public Movie Get(string id) =>
-            _moviesCollection.Find<Movie>(movie => movie.Id == id).FirstOrDefault();
 
-        public Movie Create(Movie movie)
+        public async Task<Movie> GetAsync(string id) {
+            var filter = new BsonDocument("Id",id);
+            var record= await _moviesCollection.Find(filter).FirstOrDefaultAsync();
+            return record;
+        }           
+           
+
+        public async Task<Movie> CreateAsync(Movie movie)
         {
-            _moviesCollection.InsertOne(movie);
+          await _moviesCollection.InsertOneAsync(movie);
             return movie;
         }
 
@@ -34,10 +44,13 @@ namespace GrpcService1.Repositories
         public void Update(string id, Movie bookIn) =>
             _moviesCollection.ReplaceOne(movie => movie.Id == id, bookIn);
 
-        public void Remove(Movie movieIn) =>
-            _moviesCollection.DeleteOne(movie => movie.Id == movieIn.Id);
+        public async void RemoveAsync(Movie movieIn)
+        {
+            await RemoveAsync(movieIn?.Id);
+        }
+           
 
-        public void Remove(string id) =>
-            _moviesCollection.DeleteOne(movie => movie.Id == id);
+        public async Task RemoveAsync(string id) =>
+             await _moviesCollection.DeleteOneAsync(new BsonDocument("Id", id));
     }
 }
