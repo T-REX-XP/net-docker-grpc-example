@@ -1,5 +1,6 @@
 using AutoMapper;
 using GrpcService1.Models;
+using System.Collections.Generic;
 
 namespace GrpcService1.Profiles
 {
@@ -9,6 +10,9 @@ namespace GrpcService1.Profiles
         {
             CreateMap<Movie, MovieGRPC>();
             CreateMap<MovieGRPC, Movie>();
+            CreateMap<IEnumerable<MovieGRPC>, IEnumerable<Movie>>();
+            CreateMap<IEnumerable<Movie>, IEnumerable<MovieGRPC>>();
+
         }
     }
 }

@@ -13,7 +13,7 @@ namespace GrpcService1.Repositories
         private readonly IMongoCollection<Movie> _moviesCollection;
         private readonly IMongoClient _client;
 
-
+        #region Async 
         public MovieRepository(IMoviesDatabaseSettings settings)
         {
             _client = new MongoClient(settings.ConnectionString);
@@ -30,8 +30,6 @@ namespace GrpcService1.Repositories
 
         public async Task<Movie> GetAsync(string id) {
             Console.WriteLine("---GRPC: id===" + id);
-            // var filter = new BsonDocument("Id",id);
-            // var record= await _moviesCollection.Find(filter).FirstOrDefaultAsync();
             var record=  await _moviesCollection.Find(_ => _.Id == id).SingleAsync();
             return record;
         }           
@@ -44,16 +42,17 @@ namespace GrpcService1.Repositories
         }
 
 
-        public void Update(string id, Movie bookIn) =>
-            _moviesCollection.ReplaceOne(movie => movie.Id == id, bookIn);
-
         public async void RemoveAsync(Movie movieIn)
         {
             await RemoveAsync(movieIn?.Id);
-        }
-           
+        } 
+
 
         public async Task RemoveAsync(string id) =>
              await _moviesCollection.DeleteOneAsync(new BsonDocument("Id", id));
+        #endregion
+
+        public void Update(string id, Movie bookIn) =>
+            _moviesCollection.ReplaceOne(movie => movie.Id == id, bookIn);
     }
 }

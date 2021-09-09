@@ -5,6 +5,8 @@ using GrpcService1.Models;
 using GrpcService1.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GrpcService1
@@ -38,9 +40,15 @@ namespace GrpcService1
         }
         public override async Task<MoviesResponse> GetMovies(Empty request, ServerCallContext context)
         {
-            var result = await _movieRepository.GetAsync();
-            var converted = _mapper.Map<MoviesResponse>(result);
-            return converted;
+            var moviesDto = await _movieRepository.GetAsync();
+            Console.Write("GRPC: movies count====="+ moviesDto.Count());
+            var result = new MoviesResponse();
+            
+            foreach (var item in moviesDto)
+            {
+                result.Movies.Add(_mapper.Map<MovieGRPC>(item));
+            }
+            return result;
         }
     }
 }
