@@ -26,14 +26,14 @@ namespace GrpcService1
             var createdMovie = await _movieRepository.CreateAsync(newMovie);
             return await Task.FromResult(new CreateMovieResponse() { Id = createdMovie?.Id });
         }
-        public override Task<MovieResponse> GetMovie(MovieRequest request, ServerCallContext context)
+        public override async Task<MovieResponse> GetMovie(MovieRequest request, ServerCallContext context)
         {
-            var movieDto = _movieRepository.GetAsync(request.Id);
+            var movieDto = await _movieRepository.GetAsync(request.Id);
             var movie = _mapper.Map<MovieGRPC>(movieDto);
-            return Task.FromResult(new MovieResponse()
+            return new MovieResponse()
             {
                 Movie = movie
-            });
+            };
         }
         public override async Task<MoviesResponse> GetMovies(Empty request, ServerCallContext context)
         {
