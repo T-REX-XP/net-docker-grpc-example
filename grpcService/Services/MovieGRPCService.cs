@@ -29,6 +29,7 @@ namespace GrpcService1
         public override async Task<MovieResponse> GetMovie(MovieRequest request, ServerCallContext context)
         {
             var movieDto = await _movieRepository.GetAsync(request.Id);
+            Console.WriteLine("---GRPC: movieDto===" + movieDto !=null);
             var movie = _mapper.Map<MovieGRPC>(movieDto);
             return new MovieResponse()
             {

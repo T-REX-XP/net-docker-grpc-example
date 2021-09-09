@@ -61,6 +61,7 @@ namespace WebAPIService.Controllers
         public async Task<Movie> GetAsync(string id)
         {
             var reply = client.GetMovie(new MovieRequest { Id = id });
+            Console.WriteLine("---WebApi: id==="+ id);
             //TODO: Use Automapper
             return await Task.FromResult(new Movie()
             {

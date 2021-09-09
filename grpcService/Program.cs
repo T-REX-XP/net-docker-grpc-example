@@ -1,3 +1,4 @@
+using GrpcService1.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -12,7 +13,7 @@ namespace GrpcService1
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();          
         }
 
         // Additional configuration is required to successfully run gRPC on macOS.

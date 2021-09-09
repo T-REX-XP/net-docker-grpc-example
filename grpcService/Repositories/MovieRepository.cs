@@ -2,6 +2,7 @@ using AutoMapper;
 using GrpcService1.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -28,8 +29,10 @@ namespace GrpcService1.Repositories
 
 
         public async Task<Movie> GetAsync(string id) {
-            var filter = new BsonDocument("Id",id);
-            var record= await _moviesCollection.Find(filter).FirstOrDefaultAsync();
+            Console.WriteLine("---GRPC: id===" + id);
+            // var filter = new BsonDocument("Id",id);
+            // var record= await _moviesCollection.Find(filter).FirstOrDefaultAsync();
+            var record=  await _moviesCollection.Find(_ => _.Id == id).SingleAsync();
             return record;
         }           
            

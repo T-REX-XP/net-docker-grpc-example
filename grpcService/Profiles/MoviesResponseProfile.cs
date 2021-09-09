@@ -11,6 +11,7 @@ namespace GrpcService1.Profiles
         public MoviesResponseProfile()
         {
             CreateMap<MoviesResponse, IEnumerable<MovieGRPC>>();
+            CreateMap<IEnumerable<MovieGRPC>,MoviesResponse>();
         }
     }
 }
