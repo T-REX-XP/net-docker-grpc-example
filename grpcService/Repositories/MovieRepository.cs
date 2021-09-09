@@ -21,26 +21,28 @@ namespace GrpcService1.Repositories
             _moviesCollection = database.GetCollection<Movie>(settings.MoviesCollectionName);
         }
 
-        public async Task<IEnumerable<Movie>> GetAsync(GetMoviesRequest request) {
+        public async Task<IEnumerable<Movie>> GetAsync(GetMoviesRequest request)
+        {
             Console.WriteLine("---------GRPC: MovieRepository BEFORE GetAsync");
             var filter = new BsonDocument();
-            var collection =  await _moviesCollection.Find(filter).Skip(request.Skip).Limit(request.Take).ToListAsync();
-            
+            var collection = await _moviesCollection.Find(filter).Skip(request.Skip).Limit(request.Take).ToListAsync();
+
             Console.WriteLine("---------GRPC: MovieRepository AFTER GetAsync");
             return collection;
         }
 
 
-        public async Task<Movie> GetAsync(string id) {
+        public async Task<Movie> GetAsync(string id)
+        {
             Console.WriteLine("---GRPC: id===" + id);
-            var record=  await _moviesCollection.Find(_ => _.Id == id).SingleAsync();
+            var record = await _moviesCollection.Find(_ => _.Id == id).SingleAsync();
             return record;
-        }           
-           
+        }
+
 
         public async Task<Movie> CreateAsync(Movie movie)
         {
-          await _moviesCollection.InsertOneAsync(movie);
+            await _moviesCollection.InsertOneAsync(movie);
             return movie;
         }
 
@@ -48,7 +50,7 @@ namespace GrpcService1.Repositories
         public async void RemoveAsync(Movie movieIn)
         {
             await RemoveAsync(movieIn?.Id);
-        } 
+        }
 
 
         public async Task RemoveAsync(string id) =>
