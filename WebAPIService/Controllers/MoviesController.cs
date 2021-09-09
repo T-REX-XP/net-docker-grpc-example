@@ -28,6 +28,8 @@ namespace WebAPIService.Controllers
         /// <summary>
         /// Get All Movies
         /// </summary>
+        /// <param name="skip">Skip elements</param>
+        /// <param name="take">Take elements</param>
         /// <returns></returns>
         [SwaggerOperation(Summary = "Get Movies")]
         [HttpGet]
@@ -123,6 +125,12 @@ namespace WebAPIService.Controllers
             await client.UpdateMovieAsync(new CreateMovieRequest { Movie = record });
 
         }
+        
+        /// <summary>
+        /// Delete Movie by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task DeleteAsync(string id)
         {
