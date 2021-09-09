@@ -52,7 +52,7 @@ namespace GrpcService1.Repositories
 
 
         public async Task RemoveAsync(string id) =>
-             await _moviesCollection.DeleteOneAsync(new BsonDocument("Id", id));
+              await _moviesCollection.DeleteOneAsync(a => a.Id == id);
         #endregion
 
         public async Task UpdateAsync(string id, Movie bookIn) =>
