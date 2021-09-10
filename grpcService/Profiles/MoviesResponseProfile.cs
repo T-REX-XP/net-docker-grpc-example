@@ -10,8 +10,8 @@ namespace GrpcService1.Profiles
     {
         public MoviesResponseProfile()
         {
-            CreateMap<MoviesResponse, IEnumerable<MovieGRPC>>();
-            CreateMap<IEnumerable<MovieGRPC>,MoviesResponse>();
+            CreateMap<MoviesResponse, IEnumerable<MovieGRPC>>().ForMember(d => d, m => m.MapFrom(x => x.Movies));
+            CreateMap<IEnumerable<MovieGRPC>, MoviesResponse>().ForMember(d => d.Movies, m => m.MapFrom(x => x));
         }
     }
 }
