@@ -28,6 +28,15 @@ namespace WebAPIService
             services.AddSingleton<IGRPCSettings>(sp =>
             sp.GetRequiredService<IOptions<GRPCSettings>>().Value);
 
+            // Auto Mapper Configurations
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MovieProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -41,16 +50,7 @@ namespace WebAPIService
                     Scheme = "basic",
                     In = ParameterLocation.Header,
                     Description = "Basic Authorization header using the Bearer scheme."
-                });
-
-                // Auto Mapper Configurations
-                var mapperConfig = new MapperConfiguration(mc =>
-                {
-                    mc.AddProfile(new MovieProfile());                
-                });
-                IMapper mapper = mapperConfig.CreateMapper();
-                services.AddSingleton(mapper);
-                services.AddAutoMapper(typeof(Startup));
+                });               
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
@@ -72,21 +72,22 @@ namespace WebAPIService
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-           // if (env.IsDevelopment())
-           // {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => { 
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIService v1");                    
-                    });
-           // }
+            // if (env.IsDevelopment())
+            // {
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIService v1");
+            });
+            // }
 
             //app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
