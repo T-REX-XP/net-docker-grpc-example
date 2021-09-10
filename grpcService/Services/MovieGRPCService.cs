@@ -41,11 +41,10 @@ namespace GrpcService1
         {
             var moviesDto = await _movieRepository.GetAsync(request);            
             var result = new MoviesResponse();
-
-            foreach (var item in moviesDto)
-            {
-                result.Movies.Add(_mapper.Map<MovieGRPC>(item));
-            }
+            Console.WriteLine("::GRPC--> Before map");
+            var movies = _mapper.Map<IEnumerable<MovieGRPC>>(moviesDto);
+            result.Movies.AddRange(movies);
+            Console.WriteLine("::GRPC--> After add range");
             return result;
         }
 
