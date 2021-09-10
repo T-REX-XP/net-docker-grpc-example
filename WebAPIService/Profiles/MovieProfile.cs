@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebAPIService.Models;
 
 namespace WebAPIService.Profiles
@@ -14,8 +11,7 @@ namespace WebAPIService.Profiles
             CreateMap<MovieGRPC, Models.Movie>();
             CreateMap<Models.Movie, MovieGRPC>();
 
-            CreateMap<IEnumerable<Models.Movie>, IEnumerable<MovieGRPC>>();
-            CreateMap<IEnumerable<MovieGRPC>, IEnumerable<Models.Movie>>();
+            CreateMap<IEnumerable<Models.Movie>, List<MovieGRPC>>();
 
             CreateMap<IEnumerable<Movie>, MoviesResponse>().ForMember(x => x.Movies, x => x.MapFrom(d => d));
 

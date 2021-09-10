@@ -1,6 +1,5 @@
 using AutoMapper;
 using GrpcService1.Models;
-using System.Collections.Generic;
 
 namespace GrpcService1.Profiles
 {
