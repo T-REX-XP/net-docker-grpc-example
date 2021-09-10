@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPIService.Models;
 
 namespace WebAPIService.Profiles
 {
@@ -15,6 +16,8 @@ namespace WebAPIService.Profiles
 
             CreateMap<IEnumerable<Models.Movie>, IEnumerable<MovieGRPC>>();
             CreateMap<IEnumerable<MovieGRPC>, IEnumerable<Models.Movie>>();
+
+            CreateMap<IEnumerable<Movie>,MoviesResponse>().ForMember(x => x.Movies, x => x.MapFrom(d => d));
 
             //CreateMap<CreateMovieRequest, Models.WebRequests.CreateMovieRequest>().ForMember(x => x, x => x.MapFrom(d => d.Movie));
             CreateMap<Models.WebRequests.CreateMovieRequest, CreateMovieRequest>().ForMember(x => x.Movie, x => x.MapFrom(d => d));
