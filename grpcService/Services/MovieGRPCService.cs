@@ -40,12 +40,10 @@ namespace GrpcService1
         public override async Task<MoviesResponse> GetMovies(GetMoviesRequest request, ServerCallContext context)
         {
             var moviesDto = await _movieRepository.GetAsync(request);            
-            var result = new MoviesResponse();
             Console.WriteLine("::GRPC--> Before map");
-            var movies = _mapper.Map<IEnumerable<MovieGRPC>>(moviesDto);
-            result.Movies.AddRange(movies);
+            var movies = _mapper.Map<MoviesResponse>(moviesDto);
             Console.WriteLine("::GRPC--> After add range");
-            return result;
+            return movies;
         }
 
         public override async Task<CreateMovieResponse> UpdateMovie(CreateMovieRequest request, ServerCallContext context)
