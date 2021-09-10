@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using WebAPIService.Models;
+using WebAPIService.Profiles;
 
 namespace WebAPIService
 {
@@ -40,7 +42,16 @@ namespace WebAPIService
                     In = ParameterLocation.Header,
                     Description = "Basic Authorization header using the Bearer scheme."
                 });
- 
+
+                // Auto Mapper Configurations
+                var mapperConfig = new MapperConfiguration(mc =>
+                {
+                    mc.AddProfile(new MovieProfile());                
+                });
+                IMapper mapper = mapperConfig.CreateMapper();
+                services.AddSingleton(mapper);
+                services.AddAutoMapper(typeof(Startup));
+
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
