@@ -1,4 +1,5 @@
-﻿using Grpc.Net.Client;
+﻿using AutoMapper;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
@@ -18,11 +19,13 @@ namespace WebAPIService.Controllers
         private readonly ILogger<MoviesController> _logger;
         private readonly GrpcChannel channel;
         private readonly MovieServiceGRPC.MovieServiceGRPCClient client;
-        public MoviesController(ILogger<MoviesController> logger, IGRPCSettings settings)
+        private readonly IMapper _mapper;
+        public MoviesController(ILogger<MoviesController> logger, IGRPCSettings settings, IMapper mapper)
         {
             _logger = logger;
             channel = GrpcChannel.ForAddress(settings.Address);
             client = new MovieServiceGRPC.MovieServiceGRPCClient(channel);
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -36,20 +39,7 @@ namespace WebAPIService.Controllers
         public async Task<IEnumerable<Movie>> GetMoviesAsync([FromQuery] int skip = 0, [FromQuery] int take = 2)
         {
             var movies = await client.GetMoviesAsync(new GetMoviesRequest { Skip = skip, Take = take });
-            var result = new List<Movie>();
-            foreach (var item in movies.Movies)
-            {
-                result.Add(new Movie
-                {
-                    Id = item.Id,
-                    Director = item.Director,
-                    Rated = item.Rated,
-                    Released = item.Released,
-                    Runtime = item.Runtime,
-                    Title = item.Title,
-                    Year = item.Year
-                });
-            }
+            var result = _mapper.Map<IEnumerable<Movie>>(movies);
             return result;
         }
 
@@ -64,17 +54,7 @@ namespace WebAPIService.Controllers
         {
             var reply = client.GetMovie(new MovieRequest { Id = id });
             Console.WriteLine("---WebApi: id===" + id);
-            //TODO: Use Automapper
-            return await Task.FromResult(new Movie()
-            {
-                Id = reply.Movie.Id,
-                Title = reply.Movie.Title,
-                Director = reply.Movie.Director,
-                Rated = reply.Movie.Rated,
-                Released = reply.Movie.Released,
-                Runtime = reply.Movie.Runtime,
-                Year = reply.Movie.Year
-            });
+            return await Task.FromResult(_mapper.Map<Movie>(reply.Movie));
         }
 
         /// <summary>
@@ -86,20 +66,7 @@ namespace WebAPIService.Controllers
         [HttpPost]
         public async Task<string> CreateAsync(Models.WebRequests.CreateMovieRequest request)
         {
-            var data = await client.CreateMovieAsync(
-                    //TODO: Use Automapper
-                    new CreateMovieRequest
-                    {
-                        Movie = new MovieGRPC
-                        {
-                            Title = request.Title,
-                            Director = request.Director,
-                            Released = request.Released,
-                            Rated = request.Rated,
-                            Runtime = request.Runtime,
-                            Year = request.Year
-                        }
-                    });
+            var data = await client.CreateMovieAsync(_mapper.Map<CreateMovieRequest>(request));
             return data.Id;
         }
 
@@ -112,20 +79,12 @@ namespace WebAPIService.Controllers
         [HttpPut("{id}")]
         public async Task UpdateAsync(string id, Models.WebRequests.CreateMovieRequest request)
         {
-            var record = new MovieGRPC()
-            {
-                Id = id,
-                Director = request.Director,
-                Released = request.Released,
-                Rated = request.Rated,
-                Runtime = request.Runtime,
-                Title = request.Title,
-                Year = request.Year
-            };
+            var record = _mapper.Map<MovieGRPC>(request);
+            record.Id = id;
             await client.UpdateMovieAsync(new CreateMovieRequest { Movie = record });
 
         }
-        
+
         /// <summary>
         /// Delete Movie by Id
         /// </summary>
