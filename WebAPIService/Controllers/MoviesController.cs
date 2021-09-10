@@ -39,7 +39,7 @@ namespace WebAPIService.Controllers
         public async Task<IEnumerable<Movie>> GetMoviesAsync([FromQuery] int skip = 0, [FromQuery] int take = 2)
         {
             var movies = await client.GetMoviesAsync(new GetMoviesRequest { Skip = skip, Take = take });
-            var result = _mapper.Map<IEnumerable<Movie>>(movies.Movies);
+            var result = _mapper.Map<List<Movie>>(movies.Movies);
             return result;
         }
 
