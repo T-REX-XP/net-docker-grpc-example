@@ -1,17 +1,17 @@
 version: '3.9'
 
 services:
-  grpc-service:
+  net-grpc:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-    ports:
-      - "80"
- #     - "443"
+   # ports:
+    #  - "80"
+    #  - "443"
    # volumes:
     #  - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
     #  - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-  web-api:
+  net-webapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
