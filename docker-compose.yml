@@ -2,7 +2,7 @@
 version: "3.9"
 
 services:
-  mongo:
+  database:
     image: mongo
     restart: always
     environment:
@@ -28,15 +28,13 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: ${ME_BASIC_LOGIN}
       ME_CONFIG_BASICAUTH_PASSWORD: ${ME_BASIC_PASS}
     depends_on:
-      mongo:
+      database:
         condition: service_healthy
-    external_links:
-      - "mongo:database"
     ports:
       - 8081:8081
 
-  grpc-service:
-    image: grpc-service
+  net-grpc:
+    image: net-grpc
     build:
       context: .
       dockerfile: grpcService/Dockerfile
@@ -46,13 +44,11 @@ services:
       MONGODB_ADMINUSERNAME: ${MONGO_LOGIN}
       MONGODB_PASSWORD: ${MONGO_PASSWORD}
     depends_on: 
-      mongo:
+      database:
         condition: service_started
-    external_links:
-      - "mongo:database"
 
-  web-api:
-    image: web-api
+  net-webapi:
+    image: net-webapi
     build: 
       context: .
       dockerfile: WebAPIService/Dockerfile
@@ -62,17 +58,17 @@ services:
         condition: service_started
     environment:
       GRPC_ADDRESS: ${GRPC_ADDRESS}
-    external_links:
-      - "grpc-service:backend"
 
-  proxy:
-    image: proxy
+  net-proxy:
+    image: net-proxy
     restart: always
     depends_on: 
-      - web-api
+      - net-webapi
     build:
       context: .
       dockerfile: nginx/Dockerfile
     ports:
       - 8082:80
-      - 8083:443    
+      - 8083:443
+
+    
