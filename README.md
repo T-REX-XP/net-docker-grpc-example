@@ -20,7 +20,7 @@ Set of example projects to show how to work with .NET/gRPC/docker together
 
 ## API
 Please use the following link to load Postman collection 
-[![Run in Postman](https://run.pstmn.io/button.svg)](/open-api-spec.json)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/17405680-31e4dd91-b5ff-4cb4-bad1-a5cecec13762?action=collection%2Ffork&collection-url=entityId%3D17405680-31e4dd91-b5ff-4cb4-bad1-a5cecec13762%26entityType%3Dcollection%26workspaceId%3Dc241fc21-fac7-4288-a286-5faf48e43d02#?env%5BLocal%5D=W3sia2V5IjoiYmFzZVVybCIsInZhbHVlIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6ODA4MyIsImVuYWJsZWQiOnRydWV9XQ==)
 
 
 ## List of containers
@@ -61,7 +61,7 @@ GRPC_ADDRESS=http://backend
 ## Reverse proxy
 Theare is an additional service has been added: Proxy
 It's Nginx web server that configured as reverse proxy with HTTPS certificates and potentialy can be used as a load balancer
-![Screenshot](imgs/_architecture_diagramm_feature.png)
+
 
 ## Container dependencies:
  - **mongo express** depends on mongo
